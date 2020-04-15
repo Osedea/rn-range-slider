@@ -328,7 +328,7 @@ NSDateFormatter *dateTimeFormatter;
         return;
     }
     activeTouch = nil;
-    _activeThumb = THUMB_NONE;
+    _activeThumb = _rangeEnabled ? THUMB_NONE: THUMB_LOW;
     [_delegate rangeSliderTouchEnded:self];
     [self setNeedsDisplay];
 }
@@ -442,15 +442,16 @@ NSDateFormatter *dateTimeFormatter;
         }
     }
 
-    if ([_labelStyle isEqualToString:NONE] || _activeThumb == THUMB_NONE) {
+    if (_rangeEnabled && ([_labelStyle isEqualToString:NONE] || _activeThumb == THUMB_NONE)) {
         return;
     }
 
-    NSString *text = [self formatLabelText:_activeThumb == THUMB_LOW ? _lowValue : _highValue];
+    NSString *text = [self formatLabelText:!_rangeEnabled || _activeThumb == THUMB_LOW ? _lowValue : _highValue];
+
     textRect = [text boundingRectWithSize:CGSizeMake(500, 500) options:NSStringDrawingUsesLineFragmentOrigin attributes:labelTextAttributes context:nil];
     CGFloat labelTextWidth = textRect.size.width;
     CGFloat labelWidth = labelTextWidth + 2 * _labelPadding + 2 * _labelBorderWidth;
-    CGFloat cx = _activeThumb == THUMB_LOW ? lowX : highX;
+    CGFloat cx = !_rangeEnabled || _activeThumb == THUMB_LOW ? lowX : highX;
 
     if (labelWidth < _labelTailHeight / SQRT_3_2) {
         labelWidth = _labelTailHeight / SQRT_3_2;
@@ -492,7 +493,7 @@ NSDateFormatter *dateTimeFormatter;
     CGContextSetFontSize(context, _textSize);
     [text drawAtPoint:CGPointMake(cx - labelTextWidth / 2 + overflowOffset, _labelBorderWidth + _labelPadding)
        withAttributes:labelTextAttributes];
-    //CGContextShowTextAtPoint(context, cx - labelTextWidth / 2 + overflowOffset, _labelBorderWidth + _labelPadding, [text UTF8String], text.length);
+    // CGContextShowTextAtPoint(context, cx - labelTextWidth / 2 + overflowOffset, _labelBorderWidth + _labelPadding, [text UTF8String], text.length);
 }
 
 - (void)preparePath:(CGContextRef)context x:(CGFloat)x y:(CGFloat)y left:(CGFloat)left top:(CGFloat)top right:(CGFloat)right bottom:(CGFloat)bottom tailHeight:(CGFloat)tailHeight {

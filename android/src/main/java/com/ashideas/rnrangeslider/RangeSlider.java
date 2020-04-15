@@ -355,7 +355,7 @@ public class RangeSlider extends View {
                 break;
             case MotionEvent.ACTION_UP:
                 activePointerId = -1;
-                activeThumb = THUMB_NONE;
+                activeThumb = rangeEnabled ? THUMB_NONE:THUMB_LOW;
                 if (onSliderTouchListener != null) {
                     onSliderTouchListener.onTouchEnd();
                 }
@@ -458,14 +458,14 @@ public class RangeSlider extends View {
             }
         }
 
-        if (labelStyle == LabelStyle.NONE || activeThumb == THUMB_NONE) {
+        if (rangeEnabled && (labelStyle == LabelStyle.NONE || activeThumb == THUMB_NONE)) {
             return;
         }
 
-        String text = formatLabelText(activeThumb == THUMB_LOW ? lowValue : highValue);
+        String text = formatLabelText(!rangeEnabled || activeThumb == THUMB_LOW ? lowValue : highValue);
         float labelTextWidth = labelTextPaint.measureText(text);
         float labelWidth = labelTextWidth + 2 * labelPadding + 2 * labelBorderWidth;
-        float cx = activeThumb == THUMB_LOW ? lowX : highX;
+        float cx = !rangeEnabled || activeThumb == THUMB_LOW ? lowX : highX;
 
         if (labelWidth < labelTailHeight / SQRT_3_2) {
             labelWidth = labelTailHeight / SQRT_3_2;
