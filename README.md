@@ -1,4 +1,4 @@
-# RangeSlider
+# RangeSlider (DO NOT DELETE, USED FOR SPACIAL https://github.com/Osedea/spacial_mobile-app)
 A fully customizable high quality react native Slider component backed by custom native iOS and Android views with ability to select range of values.
 
 <p align="center">
